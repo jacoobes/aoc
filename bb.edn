@@ -1,25 +1,16 @@
-{:paths ["src" "script"]
- :deps {aysylu/loom {:git/url "https://github.com/cjsauer/loom.git"
-                     :sha     "acd15ed3136a0f4091e97bfc187764ff8b60da4e"}
-        org.clojure/math.numeric-tower {:mvn/version "0.0.5"}
-        org.clojure/math.combinatorics {:mvn/version  "0.1.6"} 
-        org.clojure/data.priority-map {:mvn/version "1.2.0"}
-        org.clojure/core.memoize {:mvn/version "1.1.266"}
-        org.flatland/ordered {:mvn/version "1.15.12"}
-        io.github.paintparty/bling {:mvn/version "0.4.2"}}
+{:paths ["src"]
+ :deps {io.github.jjcomer/aoc-clj-elf {:mvn/version "0.1.2"}}
  :tasks {:requires ([babashka.fs :as fs]
-                    [aoc])
+                    [aoc-clj-elf.core :as aoc])
          -input-dir "input"
          -input {:depends [-input-dir]
                  :task (fs/create-dirs -input-dir)}
          -auth-file "auth.edn"
-         -solution-template-file "script/solution_template.clj"
          get {:doc "Fetches a specific input (defaults to today)"
               :depends [-auth-file -input]
               :task (aoc/get-input-task -auth-file -input *command-line-args*)}
          new {:doc "Creates a skeleton solution for a specific day"
-              :depends [-solution-template-file]
-              :task (aoc/gen-new-task -solution-template-file *command-line-args*)}
+              :task (aoc/gen-new-task *command-line-args*)}
          solve {:doc "Executes the solution against the input"
                 :depends [-auth-file -input]
                 :task (aoc/solve-task -input -auth-file *command-line-args*)}
