@@ -17,6 +17,10 @@
        (map #(string/split % #"-")) 
        (mapcat (fn [r] (range (Long/parseLong (first r))  (inc  (Long/parseLong (second r))) )))
   ))
+
+
+
+
 (defn find-invalid-ids [arr]
     (map (fn [el]  (let [n (str el)
                          splitted-half (split-at (/ (count n) 2) n) ]
@@ -24,6 +28,12 @@
                     {:invalid true  :num (Long/parseLong n)}
                     {:invalid false :num (Long/parseLong n)}))), arr))
 
+(defn find-invalid-ids-2 [arr]
+    (map (fn [el]  
+        (let [n (str el)]
+                (if (not (nil? (re-matches #"^(.+)(?:\1)+$" n)  ))
+                    {:invalid true  :num (Long/parseLong n)}
+                    {:invalid false :num (Long/parseLong n)}))) arr))
 (defn solve-part-1
   "The solution to part 1. Will be called with the result of the generator"
   [input]
@@ -31,15 +41,19 @@
           (filter :invalid)
           (map :num)
           (apply +)))
+
 (defn solve-part-2
   "The solution to part 2. Will be called with the result of the generator"
   [input]
-
+    (->>  (find-invalid-ids-2 input)
+          (filter :invalid)
+          (map :num)
+          (apply +))
 )
 
 (def sample-data "11-22,95-115,998-1012,1188511880-1188511890,222220-222224,1698522-1698528,446443-446449,38593856-38593862,565653-565659,824824821-824824827,2121212118-2121212124")
 
-#_(solve-part-1 
+(solve-part-2 
     (generator sample-data))
 ;; Tests
 ;; Use tests to verify your solution. Consider using the sample data provided in the question
