@@ -14,7 +14,7 @@
    (->>  (for [[i row]  (vec  (map-indexed vector input))
           [j el]   (map-indexed vector row) 
                   :when (= el \@) 
-                  :let [adjacent (map #(get-in input [(+ i (first %)) (+ j (second %))] ) offset)]]
+                  :let [adjacent (map #(get-in input (map + [i j] %)) offset)]]
                   { :pos [i j] :adj adjacent})
          (map (fn [mp] (assoc mp :adj (filter  #(= % \@) (:adj mp) )) ))
          (filter (fn [mp] (< (count (:adj mp))  4)))))
